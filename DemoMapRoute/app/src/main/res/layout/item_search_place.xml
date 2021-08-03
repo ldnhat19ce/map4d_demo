@@ -21,6 +21,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:id="@+id/iconType"
+            android:src="@drawable/location_16px"
             />
 
         <LinearLayout
