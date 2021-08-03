@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <data>
+        <variable
+            name="place"
+            type="com.ldnhat.demomaproute.domain.Result" />
+
+        <variable
+            name="clickListener"
+            type="com.ldnhat.demomaproute.adapter.ClickListener" />
+    </data>
+
+    <LinearLayout android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:onClick="@{() -> clickListener.onclick(place)}"
+        >
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:id="@+id/iconType"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{place.name}"
+                android:id="@+id/placeName"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address"
+                android:text="@{place.address}"
+                android:textSize="12sp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</layout>
