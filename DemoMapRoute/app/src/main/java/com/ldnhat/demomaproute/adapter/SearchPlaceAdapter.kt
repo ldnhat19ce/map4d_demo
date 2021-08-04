@@ -9,7 +9,7 @@ import com.ldnhat.demomaproute.databinding.ItemSearchPlaceBinding
 import com.ldnhat.demomaproute.domain.Location
 import com.ldnhat.demomaproute.domain.Result
 
-class SearchPlaceAdapter(val clickListenter : ClickListener) :
+class SearchPlaceAdapter(val clickListener : ClickListener) :
     ListAdapter<Result, SearchPlaceAdapter.SearchPlaceViewHolder>(ResultDiffCallback()) {
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlaceViewHolder {
@@ -18,14 +18,14 @@ class SearchPlaceAdapter(val clickListenter : ClickListener) :
     }
 
     override fun onBindViewHolder(holder: SearchPlaceViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListenter)
+        holder.bind(getItem(position), clickListener)
     }
 
     class SearchPlaceViewHolder(private val placeBinding: ItemSearchPlaceBinding) : RecyclerView.ViewHolder(placeBinding.root){
 
-        fun bind(item : Result, clickListenter: ClickListener){
+        fun bind(item : Result, clickListener: ClickListener){
             placeBinding.place = item
-            placeBinding.clickListener = clickListenter
+            placeBinding.clickListener = clickListener
             placeBinding.executePendingBindings()
         }
 

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ldnhat.demomaproute.viewmodel.RouteViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <vn.map4d.map.core.MFMapView
+            android:id="@+id/mapRoute"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:orientation="horizontal"
+            android:id="@+id/routePanel"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/gray"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/selectLocation"
+                android:layout_width="match_parent"
+                android:layout_height="115dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="13dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="13dp"
+                    android:id="@+id/backButton"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_back_button_32px"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:onClick="@{() -> viewModel.onBackClick()}"
+                        />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:layout_width="27dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/iconLayout"
+                    android:gravity="center"
+                    app:layout_constraintStart_toEndOf="@id/backButton"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_direction_my_location"
+                        android:layout_marginBottom="2dp"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_direction_destination"
+                        android:layout_marginTop="30dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintStart_toEndOf="@id/iconLayout"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="vertical"
+                    android:gravity="start"
+                    >
+                    <TextView
+                        android:id="@+id/startLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:paddingStart="15dp"
+                        android:gravity="center_vertical"
+                        android:hint="start"
+                        android:ellipsize="end"
+                        android:textSize="16sp"
+                        android:background="@drawable/custom_text_view_direction"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="4dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/endLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:paddingStart="15dp"
+                       android:gravity="center_vertical"
+                        android:hint="end"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/custom_text_view_direction"
+                        />
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                app:layout_constraintTop_toBottomOf="@id/selectLocation"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_margin="16dp"
+                >
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Find path"
+                    android:id="@+id/btnFindPath" />
+                <ImageView
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_distance"/>
+                <TextView
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 km"
+                    android:id="@+id/tvDistance" />
+
+                <ImageView
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_clock"/>
+                <TextView
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 min"
+                    android:id="@+id/tvDuration" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

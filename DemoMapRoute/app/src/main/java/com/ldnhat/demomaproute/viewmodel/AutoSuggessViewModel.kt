@@ -27,7 +27,13 @@ class AutoSuggessViewModel : ViewModel() {
     val checkClick:LiveData<Boolean>
     get() = _checkClick
 
+    private val _navigateToRoute = MutableLiveData<Boolean>()
+
+    val navigateToRoute:LiveData<Boolean>
+    get() = _navigateToRoute
+
     init {
+        _navigateToRoute.value = false
         _checkClick.value = false
     }
 
@@ -35,9 +41,9 @@ class AutoSuggessViewModel : ViewModel() {
         getPropertiesDeferred(input)
     }
 
-    fun getPropertiesDeferred(text : String){
+    private fun getPropertiesDeferred(text : String){
         coroutineScope.launch {
-            val propertyDeferred = MapNetwork.map.findByTextAndLocation("7e5d8bd61f83e15e80506dedf2fbe77f", text)
+            val propertyDeferred = MapNetwork.map.findByTextAndLocationAsync("7e5d8bd61f83e15e80506dedf2fbe77f", text)
             try {
                 _place.value = propertyDeferred.await()
             }catch (e : NetworkErrorException){
@@ -53,6 +59,15 @@ class AutoSuggessViewModel : ViewModel() {
 
     fun onClickToPosition(){
         _checkClick.value = true
+    }
+
+    fun onFabClicked(){
+        println("fab clicked")
+        _navigateToRoute.value = true
+    }
+
+    fun onNavigateToRoute(){
+        _navigateToRoute.value = false
     }
 
     override fun onCleared() {
