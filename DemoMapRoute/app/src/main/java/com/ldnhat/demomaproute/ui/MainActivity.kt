@@ -14,14 +14,9 @@ import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.adapter.ClickListener
 import com.ldnhat.demomaproute.adapter.SearchPlaceAdapter
 import com.ldnhat.demomaproute.databinding.ActivityMainBinding
-import com.ldnhat.demomaproute.viewmodel.AutoSuggessViewModel
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import vn.map4d.map.annotations.MFMarker
+import com.ldnhat.demomaproute.viewmodel.MainViewModel
 import vn.map4d.map.annotations.MFMarkerOptions
-import vn.map4d.map.camera.MFCameraPosition
 import vn.map4d.map.camera.MFCameraUpdateFactory
-import vn.map4d.map.core.LatLng
-import vn.map4d.map.core.MFCoordinateBounds
 import vn.map4d.map.core.Map4D
 import vn.map4d.map.core.OnMapReadyCallback
 import vn.map4d.types.MFLocationCoordinate
@@ -32,7 +27,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var map4D:Map4D? = null
 
     private val viewModel by lazy {
-        ViewModelProvider(this).get(AutoSuggessViewModel::class.java)
+        ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +46,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                ), 5
 //            ))
 
-            map4D?.animateCamera(MFCameraUpdateFactory.newLatLng(MFLocationCoordinate(it.lat, it.lng)))
+            map4D?.animateCamera(MFCameraUpdateFactory.newCoordinate(MFLocationCoordinate(it.lat, it.lng)))
 
             val markerOptions = MFMarkerOptions()
             markerOptions.position(MFLocationCoordinate(it.lat, it.lng))
@@ -110,13 +105,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         map4D.isMyLocationEnabled = true

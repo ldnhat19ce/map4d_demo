@@ -6,9 +6,9 @@ import com.ldnhat.demomaproute.domain.Place
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,10 +19,10 @@ interface MapService{
                                       ) : Deferred<Place>
 
     @GET("route")
-    fun routeAsync(@Query("key") key : String,
-                   @Query("origin") origin : String,
-                   @Query("destination") destination : String,
-                   @Query("mode") mode : String
+    fun routeAsync(@Query("key") key: String,
+                   @Query("origin") origin: String,
+                   @Query("destination") destination: String,
+                   @Query("mode") mode: String
               ) : Deferred<Direction>
 }
 

@@ -1,5 +1,6 @@
 package com.ldnhat.demomaproute.domain
 
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class Direction(
@@ -8,11 +9,17 @@ data class Direction(
     val code : String,
 
     @SerializedName("result")
-    val directionResult:MutableList<DirectionResult>
+    val directionResult:DirectionResult
 )
 
-data class DirectionResult(
 
+data class DirectionResult(
+    @SerializedName("routes")
+    val routes : MutableList<Routes>
+
+)
+
+data class Routes(
     @SerializedName("status")
     val status : String,
 

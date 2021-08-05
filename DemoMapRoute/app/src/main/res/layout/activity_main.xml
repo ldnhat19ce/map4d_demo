@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ldnhat.demomaproute.viewmodel.AutoSuggessViewModel" />
+            type="com.ldnhat.demomaproute.viewmodel.MainViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
