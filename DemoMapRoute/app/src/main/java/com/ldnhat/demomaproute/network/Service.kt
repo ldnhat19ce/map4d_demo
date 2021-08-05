@@ -2,6 +2,7 @@ package com.ldnhat.demomaproute.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.ldnhat.demomaproute.domain.Direction
+import com.ldnhat.demomaproute.domain.DirectionVehicleFilter
 import com.ldnhat.demomaproute.domain.Place
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

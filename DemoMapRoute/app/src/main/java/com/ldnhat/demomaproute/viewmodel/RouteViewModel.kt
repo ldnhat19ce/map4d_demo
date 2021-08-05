@@ -1,9 +1,13 @@
 package com.ldnhat.demomaproute.viewmodel
 
+import android.view.View
+import android.widget.PopupMenu
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.domain.Direction
+import com.ldnhat.demomaproute.domain.DirectionVehicleFilter
 import com.ldnhat.demomaproute.network.MapNetwork
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,8 +76,14 @@ class RouteViewModel : ViewModel() {
     val markerChooseEndPosition:LiveData<MFLocationCoordinate>
     get() = _markerChooseEndPosition
 
+    private val _clickShowPopup = MutableLiveData<Boolean>()
+
+    val clickShowPopup:LiveData<Boolean>
+        get() = _clickShowPopup
+
     init {
         _startLocationClick.value = false
+        _clickShowPopup.value = false
     }
 
     fun setMarkerStartPosition(mfLocationCoordinate: MFLocationCoordinate){
@@ -168,4 +178,21 @@ class RouteViewModel : ViewModel() {
         }
         _listStepLocation.value = listMF
     }
+
+    fun onClickShowPopup(){
+        _clickShowPopup.value = true
+    }
+
+    fun onClickShowPopupSuccess(){
+        _clickShowPopup.value = false
+    }
 }
+
+
+
+
+
+
+
+
+

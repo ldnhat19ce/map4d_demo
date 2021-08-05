@@ -84,3 +84,10 @@ data class Steps(
     @SerializedName("streetName")
     val streetName : String
 )
+
+enum class DirectionVehicleFilter(val value : String){
+    BIKE("bike"),
+    CAR("car"),
+    MOTORCYCLE("motorcycle"),
+    FOOT("foot")
+}

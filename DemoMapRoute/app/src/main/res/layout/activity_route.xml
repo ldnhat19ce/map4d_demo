@@ -127,9 +127,11 @@
                     android:id="@+id/optionVehicle"
                     >
                     <ImageView
+                        android:id="@+id/showPopupMenu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_menu_overflow_three_dot"
+                        android:onClick="@{() -> viewModel.onClickShowPopup()}"
                         />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -197,12 +199,14 @@
             android:id="@+id/btn_submit_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ok"
+            android:text="Chọn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="30dp"
             android:visibility="gone"
+            android:textColor="#1138f7"
+            android:background="@color/gray"
             android:onClick="@{() -> viewModel.onClickChoosePosition()}"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

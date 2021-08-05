@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.databinding.ActivityRouteBinding
+import com.ldnhat.demomaproute.domain.DirectionVehicleFilter
 import com.ldnhat.demomaproute.viewmodel.RouteViewModel
 import vn.map4d.map.annotations.*
 import vn.map4d.map.camera.MFCameraUpdateFactory
@@ -55,7 +56,8 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuI
             if (it){
                 marker?.remove()
                 polyline?.remove()
-                routeViewModel.getLocation(binding?.startLocation?.text.toString(), binding?.endLocation?.text.toString(), "bike")
+                routeViewModel.getLocation(binding?.startLocation?.text.toString(), binding?.endLocation?.text.toString(),
+                    DirectionVehicleFilter.BIKE.value)
                 routeViewModel.onFindPathSuccess()
             }
         })
@@ -123,6 +125,16 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuI
                 routeViewModel.onClickChoosePositionSuccess()
             }
         })
+
+        routeViewModel.clickShowPopup.observe(this, {
+            if (it){
+                val popupMenu:PopupMenu = PopupMenu(this, binding?.showPopupMenu)
+                popupMenu.inflate(R.menu.option_menu)
+                popupMenu.setOnMenuItemClickListener(this)
+                popupMenu.show()
+                routeViewModel.onClickShowPopupSuccess()
+            }
+        })
 //        routeViewModel.getLocation("10.763144874399996, 106.68213951019406",
 //            "10.775461025160295, 106.69533960130343", "bike")
 
@@ -143,18 +155,22 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuI
         finish()
     }
 
-    private fun showPopupMenu(v : View){
-        val popupMenu:PopupMenu = PopupMenu(v.context, v)
-        popupMenu.inflate(R.menu.option_menu)
-        popupMenu.setOnMenuItemClickListener(this)
-        popupMenu.show()
-
-    }
-
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        marker?.remove()
+        polyline?.remove()
+        routeViewModel.getLocation(
+            "${routeViewModel.markerChooseStartPosition.value?.latitude}," +
+                    " ${routeViewModel.markerChooseStartPosition.value?.longitude}",
+            "${routeViewModel.markerChooseEndPosition.value?.latitude}," +
+                    " ${routeViewModel.markerChooseEndPosition.value?.longitude}",
+            when(item?.itemId){
+                R.id.bike -> DirectionVehicleFilter.BIKE.value
+                R.id.car -> DirectionVehicleFilter.CAR.value
+                R.id.foot -> DirectionVehicleFilter.FOOT.value
+                else -> DirectionVehicleFilter.MOTORCYCLE.value
+            }
+        )
 
-        }
         return true
     }
 }
