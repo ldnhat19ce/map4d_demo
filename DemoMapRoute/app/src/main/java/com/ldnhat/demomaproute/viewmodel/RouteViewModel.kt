@@ -47,13 +47,47 @@ class RouteViewModel : ViewModel() {
     val startLocationClick:LiveData<Boolean>
     get() = _startLocationClick
 
+    private val _endLocationClick = MutableLiveData<Boolean>()
+
+    val endLocationClick:LiveData<Boolean>
+        get() = _endLocationClick
+
+    private val _isStartLocation = MutableLiveData<Boolean>()
+
+    val isStartLocation:LiveData<Boolean>
+    get() = _isStartLocation
+
+    private val _clickChoosePosition = MutableLiveData<Boolean>()
+
+    val clickChoosePosition:LiveData<Boolean>
+    get() = _clickChoosePosition
+
+    fun onClickChoosePosition(){
+        _clickChoosePosition.value = true
+    }
+
+    fun onClickChoosePositionSuccess(){
+        _clickChoosePosition.value = false
+    }
+
     fun onStartLocationClick(){
+        _isStartLocation.value = true
         _startLocationClick.value = true
     }
 
     fun onStartLocationClickSuccess(){
         _startLocationClick.value = false
     }
+
+    fun onEndLocationClick(){
+        _isStartLocation.value = false
+        _endLocationClick.value = true
+    }
+
+    fun onEndLocationClickSuccess(){
+        _endLocationClick.value = false
+    }
+
 
     fun onBackClick(){
         _backClick.value = true

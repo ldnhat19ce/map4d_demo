@@ -1,6 +1,7 @@
 package com.ldnhat.demomaproute
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.ldnhat.demomaproute.domain.Direction

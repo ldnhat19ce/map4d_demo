@@ -1,8 +1,10 @@
 package com.ldnhat.demomaproute.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,10 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.databinding.ActivityRouteBinding
 import com.ldnhat.demomaproute.viewmodel.RouteViewModel
-import vn.map4d.map.annotations.MFMarker
-import vn.map4d.map.annotations.MFMarkerOptions
-import vn.map4d.map.annotations.MFPolyline
-import vn.map4d.map.annotations.MFPolylineOptions
+import vn.map4d.map.annotations.*
 import vn.map4d.map.camera.MFCameraUpdateFactory
 import vn.map4d.map.core.Map4D
 import vn.map4d.map.core.OnMapReadyCallback
@@ -33,6 +32,7 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
     private var polyline:MFPolyline? = null
     private var markerStartPosition:MFMarker? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -71,7 +71,6 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
                 .position(MFLocationCoordinate(latLngList[latLngList.size - 1].latitude,
                     latLngList[latLngList.size - 1].longitude))
                 .title("demo")
-                .snippet("sdsdssdsdsdsds")
             )
             map4D?.moveCamera(MFCameraUpdateFactory.newCoordinate(MFLocationCoordinate(latLngList[latLngList.size - 1].latitude,
                 latLngList[latLngList.size - 1].longitude)))
@@ -80,16 +79,49 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
         routeViewModel.startLocationClick.observe(this, {
             if (it){
                 val centerOfMap: MFLocationCoordinate? = map4D?.cameraPosition?.target
-                Toast.makeText(this, "center: "+centerOfMap?.latitude+" lng: "+centerOfMap?.longitude, Toast.LENGTH_SHORT)
-                    .show()
-                marker = map4D?.addMarker(MFMarkerOptions()
+//                Toast.makeText(this, "center: "+centerOfMap?.latitude+" lng: "+centerOfMap?.longitude, Toast.LENGTH_SHORT)
+//                    .show()
+                markerStartPosition = map4D?.addMarker(MFMarkerOptions()
                     .position(centerOfMap!!)
                     .draggable(true)
+                    .icon(MFBitmapDescriptorFactory.fromResource(R.drawable.location_64px))
                 )
+                binding?.btnSubmitPosition?.visibility = View.VISIBLE
+                binding?.textWayDragg?.visibility = View.VISIBLE
                 routeViewModel.onStartLocationClickSuccess()
             }
         })
 
+        routeViewModel.endLocationClick.observe(this, {
+            if (it){
+                val centerOfMap: MFLocationCoordinate? = map4D?.cameraPosition?.target
+                markerStartPosition = map4D?.addMarker(MFMarkerOptions()
+                    .position(centerOfMap!!)
+                    .draggable(true)
+                    .icon(MFBitmapDescriptorFactory.fromResource(R.drawable.location_64px))
+                )
+                binding?.btnSubmitPosition?.visibility = View.VISIBLE
+                binding?.textWayDragg?.visibility = View.VISIBLE
+                routeViewModel.onEndLocationClickSuccess()
+            }
+        })
+
+
+        routeViewModel.clickChoosePosition.observe(this, {
+            if (it){
+                if (routeViewModel.isStartLocation.value == true){
+                    binding?.startLocation?.text =
+                        "${markerStartPosition?.position?.latitude} , ${markerStartPosition?.position?.longitude}"
+                } else{
+                    binding?.endLocation?.text =
+                        "${markerStartPosition?.position?.latitude} , ${markerStartPosition?.position?.longitude}"
+                }
+                markerStartPosition?.remove()
+                binding?.btnSubmitPosition?.visibility = View.GONE
+                binding?.textWayDragg?.visibility = View.GONE
+                routeViewModel.onClickChoosePositionSuccess()
+            }
+        })
 //        routeViewModel.getLocation("10.763144874399996, 106.68213951019406",
 //            "10.775461025160295, 106.69533960130343", "bike")
 

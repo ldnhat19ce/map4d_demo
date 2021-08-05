@@ -5,4 +5,5 @@
     <string name="start_location">Địa điểm xuất phát</string>
     <string name="end_location">Địa điểm đến</string>
     <string name="img_des">TODO</string>
+    <string name="way_dragger_marker">Giữ marker và kéo thả vào vị trí muốn chọn</string>
 </resources>
