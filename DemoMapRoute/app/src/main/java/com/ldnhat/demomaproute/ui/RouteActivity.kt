@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,7 +21,7 @@ import vn.map4d.map.core.Map4D
 import vn.map4d.map.core.OnMapReadyCallback
 import vn.map4d.types.MFLocationCoordinate
 
-class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
+class RouteActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
 
     private var binding : ActivityRouteBinding? = null
 
@@ -59,21 +61,19 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         routeViewModel.listStepLocation.observe(this, {
-            routeViewModel.printList()
-            val latLngList = it
 
             polyline = map4D?.addPolyline(
-                MFPolylineOptions().add(*latLngList.toTypedArray())
+                MFPolylineOptions().add(*it.toTypedArray())
                     .color(Color.RED)
                     .width(4.0f))
 
             marker = map4D?.addMarker(MFMarkerOptions()
-                .position(MFLocationCoordinate(latLngList[latLngList.size - 1].latitude,
-                    latLngList[latLngList.size - 1].longitude))
+                .position(MFLocationCoordinate(it[it.size - 1].latitude,
+                    it[it.size - 1].longitude))
                 .title("demo")
             )
-            map4D?.moveCamera(MFCameraUpdateFactory.newCoordinate(MFLocationCoordinate(latLngList[latLngList.size - 1].latitude,
-                latLngList[latLngList.size - 1].longitude)))
+            map4D?.moveCamera(MFCameraUpdateFactory.newCoordinate(MFLocationCoordinate(it[it.size - 1].latitude,
+                it[it.size - 1].longitude)))
         })
 
         routeViewModel.startLocationClick.observe(this, {
@@ -110,11 +110,12 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
         routeViewModel.clickChoosePosition.observe(this, {
             if (it){
                 if (routeViewModel.isStartLocation.value == true){
-                    binding?.startLocation?.text =
-                        "${markerStartPosition?.position?.latitude} , ${markerStartPosition?.position?.longitude}"
+                    routeViewModel.setMarkerStartPosition(MFLocationCoordinate(markerStartPosition?.position!!.latitude,
+                        markerStartPosition?.position!!.longitude
+                        ))
                 } else{
-                    binding?.endLocation?.text =
-                        "${markerStartPosition?.position?.latitude} , ${markerStartPosition?.position?.longitude}"
+                    routeViewModel.setMarkerEndPosition(MFLocationCoordinate(markerStartPosition?.position!!.latitude,
+                        markerStartPosition?.position!!.longitude))
                 }
                 markerStartPosition?.remove()
                 binding?.btnSubmitPosition?.visibility = View.GONE
@@ -131,6 +132,7 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
         this.map4D = map4D
     }
 
+
     override fun onBackPressed() {
         super.onBackPressed()
         shutdown(0, Intent())
@@ -139,5 +141,20 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun shutdown(i : Int, intent : Intent){
         setResult(i, intent)
         finish()
+    }
+
+    private fun showPopupMenu(v : View){
+        val popupMenu:PopupMenu = PopupMenu(v.context, v)
+        popupMenu.inflate(R.menu.option_menu)
+        popupMenu.setOnMenuItemClickListener(this)
+        popupMenu.show()
+
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        when(item?.itemId){
+
+        }
+        return true
     }
 }

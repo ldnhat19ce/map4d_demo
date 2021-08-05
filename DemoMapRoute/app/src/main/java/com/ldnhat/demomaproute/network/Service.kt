@@ -22,7 +22,8 @@ interface MapService{
     fun routeAsync(@Query("key") key: String,
                    @Query("origin") origin: String,
                    @Query("destination") destination: String,
-                   @Query("mode") mode: String
+                   @Query("mode") mode: String,
+                   @Query("weight") weight : Int
               ) : Deferred<Direction>
 }
 

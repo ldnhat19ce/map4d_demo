@@ -62,6 +62,28 @@ class RouteViewModel : ViewModel() {
     val clickChoosePosition:LiveData<Boolean>
     get() = _clickChoosePosition
 
+    private val _markerChooseStartPosition = MutableLiveData<MFLocationCoordinate>()
+
+    val markerChooseStartPosition:LiveData<MFLocationCoordinate>
+    get() = _markerChooseStartPosition
+
+    private val _markerChooseEndPosition = MutableLiveData<MFLocationCoordinate>()
+
+    val markerChooseEndPosition:LiveData<MFLocationCoordinate>
+    get() = _markerChooseEndPosition
+
+    init {
+        _startLocationClick.value = false
+    }
+
+    fun setMarkerStartPosition(mfLocationCoordinate: MFLocationCoordinate){
+        _markerChooseStartPosition.value = mfLocationCoordinate
+    }
+
+    fun setMarkerEndPosition(mfLocationCoordinate: MFLocationCoordinate){
+        _markerChooseEndPosition.value = mfLocationCoordinate
+    }
+
     fun onClickChoosePosition(){
         _clickChoosePosition.value = true
     }
@@ -108,7 +130,7 @@ class RouteViewModel : ViewModel() {
     private fun getRouteDeferred(origin: String, destination: String, mode: String) {
         coroutineScope.launch {
             val directionDeferred = MapNetwork.map.routeAsync("7e5d8bd61f83e15e80506dedf2fbe77f",
-                origin, destination, mode
+                origin, destination, mode, 1
             )
             try {
                _direction.value = directionDeferred.await()
@@ -137,8 +159,9 @@ class RouteViewModel : ViewModel() {
                 it.steps.forEach {
                     //println(it.startLocation.lat)
                     val mfLocation = MFLocationCoordinate(it.startLocation.lat, it.startLocation.lng)
-
+                    val mf = MFLocationCoordinate(it.endLocation.lat, it.endLocation.lng)
                     listMF.add(mfLocation)
+                    listMF.add(mf)
 
                 }
             }

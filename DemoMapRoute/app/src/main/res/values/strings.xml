@@ -6,4 +6,8 @@
     <string name="end_location">Địa điểm đến</string>
     <string name="img_des">TODO</string>
     <string name="way_dragger_marker">Giữ marker và kéo thả vào vị trí muốn chọn</string>
+    <string name="bike">Xe đạp</string>
+    <string name="car">Xe hơi</string>
+    <string name="foot">Đi bộ</string>
+    <string name="motorcycle">Xe máy</string>
 </resources>
