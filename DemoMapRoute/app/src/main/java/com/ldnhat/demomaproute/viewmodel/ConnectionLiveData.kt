@@ -26,13 +26,17 @@ class ConnectionLiveData(context : Context) : LiveData<Boolean>() {
 
     override fun onActive() {
         super.onActive()
-        checkValidNetworks()
         networkCallback = createNetworkCallback()
+
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
+
         println("on active")
         connectionManager.registerNetworkCallback(networkRequest, networkCallback)
+        if (connectionManager.allNetworks.isEmpty()){
+            postValue(false)
+        }
     }
 
     override fun onInactive() {
@@ -61,13 +65,13 @@ class ConnectionLiveData(context : Context) : LiveData<Boolean>() {
                 }
             }
         }
-
         override fun onLost(network: Network) {
             super.onLost(network)
             println("on lost")
             validNetworks.remove(network)
             checkValidNetworks()
         }
+
     }
 
 }
