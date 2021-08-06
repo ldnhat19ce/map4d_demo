@@ -1,24 +1,16 @@
 package com.ldnhat.demomaproute.viewmodel
 
-import android.view.View
-import android.widget.PopupMenu
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.domain.Direction
-import com.ldnhat.demomaproute.domain.DirectionVehicleFilter
 import com.ldnhat.demomaproute.network.MapNetwork
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import vn.map4d.map.annotations.MFPolyline
 import vn.map4d.types.MFLocationCoordinate
-import java.util.ArrayList
+import java.util.*
 
 class RouteViewModel : ViewModel() {
 

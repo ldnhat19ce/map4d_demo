@@ -6,14 +6,18 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.adapter.ClickListener
 import com.ldnhat.demomaproute.adapter.SearchPlaceAdapter
 import com.ldnhat.demomaproute.databinding.ActivityMainBinding
+import com.ldnhat.demomaproute.utils.AlertUtils
+import com.ldnhat.demomaproute.viewmodel.ConnectionLiveData
 import com.ldnhat.demomaproute.viewmodel.MainViewModel
 import vn.map4d.map.annotations.MFMarkerOptions
 import vn.map4d.map.camera.MFCameraUpdateFactory
@@ -26,6 +30,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var binding:ActivityMainBinding? = null
     private var map4D:Map4D? = null
 
+    private val connectionLiveData:LiveData<Boolean> by lazy {
+        ConnectionLiveData(this)
+    }
+
     private val viewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
@@ -36,6 +44,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding?.mapview?.getMapAsync(this)
         binding?.viewModel = viewModel
+
+
+        connectionLiveData.observe(this, {
+            if (!it){
+               //Toast.makeText(this, "No network connection", Toast.LENGTH_SHORT).show()
+                AlertUtils.showAlertDialog(this, R.string.alert_title, R.string.network_not_connected)
+            }
+        })
 
         val adapter = SearchPlaceAdapter(ClickListener{
             //Toast.makeText(this, "lat : ${it.lat}, lng: ${it.lng}", Toast.LENGTH_SHORT).show()

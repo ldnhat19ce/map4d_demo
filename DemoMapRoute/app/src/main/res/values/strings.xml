@@ -10,4 +10,7 @@
     <string name="car">Xe hơi</string>
     <string name="foot">Đi bộ</string>
     <string name="motorcycle">Xe máy</string>
+    <string name="network_not_connected">Không có mạng, vui lòng kiểm tra kết nối mạng.</string>
+    <string name="ok">Đồng ý</string>
+    <string name="alert_title">Thông Báo</string>
 </resources>
