@@ -1,14 +1,18 @@
 package com.ldnhat.demomaproute.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
@@ -24,11 +28,15 @@ import vn.map4d.map.camera.MFCameraUpdateFactory
 import vn.map4d.map.core.Map4D
 import vn.map4d.map.core.OnMapReadyCallback
 import vn.map4d.types.MFLocationCoordinate
+import java.util.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback,
+    Map4D.OnMyLocationButtonClickListener
+{
 
     private var binding:ActivityMainBinding? = null
     private var map4D:Map4D? = null
+    private var locationPermissionGranted = false
 
     private val connectionLiveData:LiveData<Boolean> by lazy {
         ConnectionLiveData(this)
@@ -113,18 +121,63 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map4D: Map4D) {
         this.map4D = map4D
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
+
+        enableMyLocation()
+        updateLocationUI()
+    }
+
+    private fun enableMyLocation(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+            ){
+                locationPermissionGranted = true
+            }else{
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE)
+            }
         }
-        map4D.isMyLocationEnabled = true
-        map4D.uiSettings.isMyLocationButtonEnabled = true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        locationPermissionGranted = false
+        when(requestCode){
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    locationPermissionGranted = true
+                }
+            }
+        }
+        updateLocationUI()
+    }
+
+    private fun updateLocationUI(){
+        try {
+            if (locationPermissionGranted){
+                map4D?.isMyLocationEnabled = true
+                map4D?.uiSettings?.isMyLocationButtonEnabled = true
+            }else{
+                map4D?.isMyLocationEnabled = false
+                map4D?.uiSettings?.isMyLocationButtonEnabled = false
+                enableMyLocation()
+            }
+        }catch (e : SecurityException){
+
+        }
+    }
+
+    override fun onMyLocationButtonClick(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    companion object{
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 99
     }
 
     override fun onDestroy() {
