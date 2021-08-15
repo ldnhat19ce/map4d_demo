@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ldnhat.demomaproute.domain.Direction
 import com.ldnhat.demomaproute.network.MapNetwork
+import com.ldnhat.demomaproute.utils.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -131,7 +132,7 @@ class RouteViewModel : ViewModel() {
 
     private fun getRouteDeferred(origin: String, destination: String, mode: String) {
         coroutineScope.launch {
-            val directionDeferred = MapNetwork.map.routeAsync("7e5d8bd61f83e15e80506dedf2fbe77f",
+            val directionDeferred = MapNetwork.map.routeAsync(Constant.KEY,
                 origin, destination, mode, 1
             )
             try {

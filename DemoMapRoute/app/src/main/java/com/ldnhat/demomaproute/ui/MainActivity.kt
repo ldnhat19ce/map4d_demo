@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.adapter.ClickListener
 import com.ldnhat.demomaproute.adapter.SearchPlaceAdapter
@@ -53,6 +55,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         binding?.mapview?.getMapAsync(this)
         binding?.viewModel = viewModel
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding?.bottomSheet?.bottomSheet as View)
+        binding?.bottomSheet?.viewModel = viewModel
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        viewModel.bottomSheetState.observe(this, {
+            if (it){
+
+            }
+        })
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+        })
 
         connectionLiveData.observe(this, {
             if (!it){
@@ -62,14 +83,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         })
 
         val adapter = SearchPlaceAdapter(ClickListener{
-            //Toast.makeText(this, "lat : ${it.lat}, lng: ${it.lng}", Toast.LENGTH_SHORT).show()
-//            map4D?.animateCamera(MFCameraUpdateFactory.newCoordinateBounds(
-//                MFCoordinateBounds(
-//                    MFLocationCoordinate(it.lat, it.lng),
-//                    MFLocationCoordinate(it.lat, it.lng)
-//                ), 5
-//            ))
-
             map4D?.animateCamera(MFCameraUpdateFactory.newCoordinate(MFLocationCoordinate(it.lat, it.lng)))
 
             val markerOptions = MFMarkerOptions()
@@ -116,11 +129,51 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             }
         })
 
+        viewModel.modelMap.observe(this, {
+            if (it){
+                map4D?.enable3DMode(true)
+            }else{
+                map4D?.enable3DMode(false)
+            }
+        })
+
+        viewModel.modelMapClick.observe(this, {
+            if (it){
+                if (map4D?.is3DMode == true){
+                    viewModel.onModeMapIs2D()
+                }else{
+                    viewModel.onModeMapIs3D()
+                    map4D?.setOnBuildingClickListener { buildingId, name, location ->
+                        map4D?.setSelectedBuildings(listOf(buildingId))
+                        Toast.makeText(this, name, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                viewModel.onModeMapClicked()
+            }
+        })
+
+        viewModel.placeDetail.observe(this, {
+            if (it != null){
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }else{
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        })
+
         binding?.lifecycleOwner = this
     }
 
     override fun onMapReady(map4D: Map4D) {
         this.map4D = map4D
+
+//        map4D.setOnMapClickListener {
+//            Toast.makeText(this, it.latitude.toString(), Toast.LENGTH_SHORT).show()
+//        }
+
+        map4D.setOnPOIClickListener { placeId, title, mfLocationCoordinate ->
+            println(placeId)
+            viewModel.getPlaceDetail(placeId)
+        }
 
         enableMyLocation()
         updateLocationUI()
@@ -162,6 +215,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             if (locationPermissionGranted){
                 map4D?.isMyLocationEnabled = true
                 map4D?.uiSettings?.isMyLocationButtonEnabled = true
+
             }else{
                 map4D?.isMyLocationEnabled = false
                 map4D?.uiSettings?.isMyLocationButtonEnabled = false
@@ -173,8 +227,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
     }
 
     override fun onMyLocationButtonClick(): Boolean {
-        TODO("Not yet implemented")
+        startActivity(Intent("android.settings.LOCATION_SOURCE_SETTINGS"))
+        return true
     }
+
 
     companion object{
         private const val LOCATION_PERMISSION_REQUEST_CODE = 99
@@ -184,4 +240,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         super.onDestroy()
         binding?.mapview?.onDestroy()
     }
+
+
 }

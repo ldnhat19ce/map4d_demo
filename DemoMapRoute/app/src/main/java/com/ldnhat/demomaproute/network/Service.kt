@@ -4,6 +4,8 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.ldnhat.demomaproute.domain.Direction
 import com.ldnhat.demomaproute.domain.DirectionVehicleFilter
 import com.ldnhat.demomaproute.domain.Place
+import com.ldnhat.demomaproute.domain.PlaceDetail
+import com.ldnhat.demomaproute.utils.Constant
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
@@ -11,6 +13,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MapService{
@@ -26,16 +29,16 @@ interface MapService{
                    @Query("mode") mode: String,
                    @Query("weight") weight : Int
               ) : Deferred<Direction>
+
+    @GET("place/detail/{id}")
+    fun findPlaceDetailByIdAsync(@Path("id") id : String, @Query("key") key: String)
+    : Deferred<PlaceDetail>
 }
 
 object MapNetwork{
 
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
-
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.map4d.vn/sdk/")
+        .baseUrl(Constant.API_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
