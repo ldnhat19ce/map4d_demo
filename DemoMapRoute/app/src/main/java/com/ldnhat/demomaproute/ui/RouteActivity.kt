@@ -54,11 +54,18 @@ class RouteActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuI
 
         routeViewModel.findPathClick.observe(this, {
             if (it){
-                marker?.remove()
-                polyline?.remove()
-                routeViewModel.getLocation(binding?.startLocation?.text.toString(), binding?.endLocation?.text.toString(),
-                    DirectionVehicleFilter.BIKE.value)
-                routeViewModel.onFindPathSuccess()
+                if (binding?.startLocation?.text?.toString()?.trim()?.isBlank() == false &&
+                    binding?.endLocation?.text?.toString()?.trim()?.isBlank() == false
+                ){
+                    marker?.remove()
+                    polyline?.remove()
+                    routeViewModel.getLocation(binding?.startLocation?.text.toString(), binding?.endLocation?.text.toString(),
+                        DirectionVehicleFilter.BIKE.value)
+                    routeViewModel.onFindPathSuccess()
+                }else{
+                    routeViewModel.onFindPathSuccess()
+                    Toast.makeText(this, "Điền đầy đủ", Toast.LENGTH_SHORT).show()
+                }
             }
         })
 

@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        enableMyLocation()
+
         binding?.mapview?.getMapAsync(this)
         binding?.viewModel = viewModel
 
@@ -105,7 +107,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.updateFilter(s.toString())
+                if (connectionLiveData.value == false){
+                    Toast.makeText(this@MainActivity, "không tìm thấy kết quả!", Toast.LENGTH_SHORT).show()
+                }else{
+                    viewModel.updateFilter(s.toString())
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -161,11 +167,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         })
 
         binding?.lifecycleOwner = this
+
     }
 
     override fun onMapReady(map4D: Map4D) {
         this.map4D = map4D
-
 //        map4D.setOnMapClickListener {
 //            Toast.makeText(this, it.latitude.toString(), Toast.LENGTH_SHORT).show()
 //        }
@@ -175,16 +181,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             viewModel.getPlaceDetail(placeId)
         }
 
-        enableMyLocation()
         updateLocationUI()
+
+
     }
 
     private fun enableMyLocation(){
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-            ){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            if (ContextCompat.checkSelfPermission(this.applicationContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED){
                 locationPermissionGranted = true
             }else{
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
@@ -204,6 +210,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     locationPermissionGranted = true
+                }else{
+                    locationPermissionGranted = false
+                    enableMyLocation()
                 }
             }
         }
@@ -219,10 +228,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             }else{
                 map4D?.isMyLocationEnabled = false
                 map4D?.uiSettings?.isMyLocationButtonEnabled = false
-                enableMyLocation()
             }
         }catch (e : SecurityException){
-
+            println(e.message)
         }
     }
 
