@@ -158,14 +158,17 @@ class RouteViewModel : ViewModel() {
     private fun drawPolyline(){
         val listMF = ArrayList<MFLocationCoordinate>()
         direction.value?.directionResult?.routes?.forEach {
-            it.legs[0].steps.forEach {
-                //println(it.startLocation.lat)
-                val mfLocation = MFLocationCoordinate(it.startLocation.lat, it.startLocation.lng)
-                val mf = MFLocationCoordinate(it.endLocation.lat, it.endLocation.lng)
-                listMF.add(mfLocation)
-                listMF.add(mf)
+            it.legs.forEach {
+                it.steps.forEach {
+                    //println(it.startLocation.lat)
+                    val mfLocation = MFLocationCoordinate(it.startLocation.lat, it.startLocation.lng)
+                    val mf = MFLocationCoordinate(it.endLocation.lat, it.endLocation.lng)
+                    listMF.add(mfLocation)
+                    listMF.add(mf)
 
+                }
             }
+
         }
         _listStepLocation.value = listMF
     }
