@@ -1,16 +1,15 @@
 package com.ldnhat.demomaproute.ui
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,10 +17,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.adapter.ClickListener
 import com.ldnhat.demomaproute.adapter.SearchPlaceAdapter
 import com.ldnhat.demomaproute.databinding.ActivityMainBinding
+import com.ldnhat.demomaproute.domain.ChipCategory
 import com.ldnhat.demomaproute.utils.AlertUtils
 import com.ldnhat.demomaproute.viewmodel.ConnectionLiveData
 import com.ldnhat.demomaproute.viewmodel.MainViewModel
@@ -165,6 +166,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         })
+
+        val chipGroup = binding?.category
+
+        val inflator = LayoutInflater.from(chipGroup?.context)
+
+        val chip :Chip  = inflator.inflate(R.layout.chip_category, chipGroup, false) as Chip
+        chip.text = ChipCategory.ATM.value
+        chip.tag = ChipCategory.ATM.value
+
+        chipGroup?.removeAllViews()
+        chipGroup?.addView(chip)
 
         binding?.lifecycleOwner = this
 

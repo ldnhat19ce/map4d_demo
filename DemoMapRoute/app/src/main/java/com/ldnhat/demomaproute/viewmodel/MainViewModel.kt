@@ -90,10 +90,12 @@ class MainViewModel : ViewModel() {
 
            try {
                _placeDetail.value = placeDetailDeferred.await()
+
            }catch (e : NetworkErrorException){
                 e.printStackTrace()
            }
        }
+
     }
 
     fun onClicked(){

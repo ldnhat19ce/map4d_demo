@@ -33,15 +33,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     >
-                    <androidx.appcompat.widget.SearchView
-                        android:id="@+id/textCheckNetwork"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#f80812"
-                        android:textSize="16sp"
-                        android:visibility="gone"
-                        />
-
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -53,6 +44,20 @@
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/custom_autocomplete_text_view"
                         />
+
+                    <HorizontalScrollView
+                        android:id="@+id/chips"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            android:padding="16dp"
+                            />
+                    </HorizontalScrollView>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"

@@ -60,10 +60,12 @@ fun modeMapText(button: Button, is3DMode : Boolean?){
 @BindingAdapter("placeImage")
 fun bottomSheetPlaceImage(imageView: ImageView, placeDetail: PlaceDetail?){
     placeDetail?.let {
-        if (it.result.photos.isNotEmpty()){
+        if (!it.result.photos.isNullOrEmpty()){
             Glide.with(imageView)
                 .load(it.result.photos[0].url)
                 .into(imageView)
+        }else{
+            imageView.setImageResource(R.drawable.building_default)
         }
     }
 }
