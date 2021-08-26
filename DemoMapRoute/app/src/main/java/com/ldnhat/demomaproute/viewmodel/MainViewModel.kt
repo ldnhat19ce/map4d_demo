@@ -6,21 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ldnhat.demomaproute.domain.Place
 import com.ldnhat.demomaproute.domain.PlaceDetail
+import com.ldnhat.demomaproute.domain.PlaceNearBy
 import com.ldnhat.demomaproute.network.MapNetwork
 import com.ldnhat.demomaproute.utils.Constant
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 class MainViewModel : ViewModel() {
 
     private var viewModelJob = Job()
 
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    private val filter = FilterHolder()
 
     private val _place = MutableLiveData<Place>()
 
@@ -56,6 +57,11 @@ class MainViewModel : ViewModel() {
 
     val placeDetail:LiveData<PlaceDetail>
     get() = _placeDetail
+
+    private val _placeNearBy = MutableLiveData<PlaceNearBy>()
+
+    val placeNearBy : LiveData<PlaceNearBy>
+    get() = _placeNearBy
 
     init {
         _navigateToRoute.value = false
@@ -138,10 +144,55 @@ class MainViewModel : ViewModel() {
         _modeMap.value = true
     }
 
+    fun onFilterPlaceNearChanged(tag : String, isChecked : Boolean, location : String, radius : String){
+        if (this.filter.update(tag, isChecked)){
+            onQueryPlaceNearChanged(location, radius)
+        }
+    }
+
+    private fun onQueryPlaceNearChanged(location : String, radius : String){
+//        coroutineScope.cancel()
+//
+//        coroutineScope.launch {
+//            try {
+//
+//            }catch (e : IOException){
+//                e.printStackTrace()
+//            }
+//        }
+        filter.currentValue?.let {
+            MapNetwork.map.findPlaceNear(Constant.KEY, location, radius, it).enqueue(
+                object : Callback<PlaceNearBy> {
+                    override fun onResponse(call: Call<PlaceNearBy>, response: Response<PlaceNearBy>) {
+                        println(response.body())
+                    }
+
+                    override fun onFailure(call: Call<PlaceNearBy>, t: Throwable) {
+                        println("loi")
+                    }
+                })
+        }
+
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
+    private class FilterHolder{
+        var currentValue : String? = null
+        private set
 
+        fun update(changedFilter : String, isChecked: Boolean) : Boolean{
+            if (isChecked){
+                currentValue = changedFilter
+                return true
+            }else if (currentValue == changedFilter){
+                currentValue = null
+                return true
+            }
+            return false
+        }
+    }
 }

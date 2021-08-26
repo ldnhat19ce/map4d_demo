@@ -175,6 +175,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         chip.text = ChipCategory.ATM.value
         chip.tag = ChipCategory.ATM.value
 
+        chip.setOnCheckedChangeListener { buttonView, isChecked ->
+            val centerOfMap: MFLocationCoordinate? = map4D?.cameraPosition?.target
+
+            val location = "${centerOfMap?.latitude},${centerOfMap?.longitude}"
+
+            println(location)
+
+            viewModel.onFilterPlaceNearChanged(buttonView.tag as String, isChecked, location, "100")
+
+        }
+
         chipGroup?.removeAllViews()
         chipGroup?.addView(chip)
 

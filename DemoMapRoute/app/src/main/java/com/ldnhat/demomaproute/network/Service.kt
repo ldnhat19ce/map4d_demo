@@ -1,10 +1,7 @@
 package com.ldnhat.demomaproute.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.ldnhat.demomaproute.domain.Direction
-import com.ldnhat.demomaproute.domain.DirectionVehicleFilter
-import com.ldnhat.demomaproute.domain.Place
-import com.ldnhat.demomaproute.domain.PlaceDetail
+import com.ldnhat.demomaproute.domain.*
 import com.ldnhat.demomaproute.utils.Constant
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -15,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryName
 
 interface MapService{
 
@@ -33,6 +31,13 @@ interface MapService{
     @GET("place/detail/{id}")
     fun findPlaceDetailByIdAsync(@Path("id") id : String, @Query("key") key: String)
     : Deferred<PlaceDetail>
+
+    @GET("place/nearby-search")
+    fun findPlaceNear(@Query("key") key : String,
+                      @Query("location") location : String,
+                      @Query("radius") radius : String,
+                      @Query("types")  types : String
+                      ) : Call<PlaceNearBy>
 }
 
 object MapNetwork{

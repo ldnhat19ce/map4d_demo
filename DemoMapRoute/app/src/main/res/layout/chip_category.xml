@@ -4,6 +4,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ThemeChip"
-    android:checked="true"
+    android:checked="false"
     app:checkedIconVisible="true"
     />
