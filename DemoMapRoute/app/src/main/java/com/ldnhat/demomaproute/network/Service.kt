@@ -33,11 +33,11 @@ interface MapService{
     : Deferred<PlaceDetail>
 
     @GET("place/nearby-search")
-    fun findPlaceNear(@Query("key") key : String,
-                      @Query("location") location : String,
-                      @Query("radius") radius : String,
-                      @Query("types")  types : String
-                      ) : Call<PlaceNearBy>
+    fun findPlaceNearAsync(@Query("key") key : String,
+                           @Query("location") location : String,
+                           @Query("radius") radius : String,
+                           @Query("types")  types : String
+                      ) : Deferred<PlaceNearBy>
 }
 
 object MapNetwork{

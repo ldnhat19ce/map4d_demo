@@ -151,28 +151,22 @@ class MainViewModel : ViewModel() {
     }
 
     private fun onQueryPlaceNearChanged(location : String, radius : String){
-//        coroutineScope.cancel()
-//
-//        coroutineScope.launch {
-//            try {
-//
-//            }catch (e : IOException){
-//                e.printStackTrace()
-//            }
-//        }
-        filter.currentValue?.let {
-            MapNetwork.map.findPlaceNear(Constant.KEY, location, radius, it).enqueue(
-                object : Callback<PlaceNearBy> {
-                    override fun onResponse(call: Call<PlaceNearBy>, response: Response<PlaceNearBy>) {
-                        println(response.body())
-                    }
+       // coroutineScope.cancel()
 
-                    override fun onFailure(call: Call<PlaceNearBy>, t: Throwable) {
-                        println("loi")
-                    }
-                })
+        coroutineScope.launch {
+            println(filter.currentValue)
+
+            try {
+                filter.currentValue?.let {
+                    val placeNearDetailDeferred = MapNetwork.map.findPlaceNearAsync(Constant.KEY, location, radius, it)
+                    _placeNearBy.value = placeNearDetailDeferred.await()
+                    println(_placeNearBy.value)
+                }
+
+            }catch (e : IOException){
+                e.printStackTrace()
+            }
         }
-
     }
 
     override fun onCleared() {

@@ -22,7 +22,7 @@ import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.adapter.ClickListener
 import com.ldnhat.demomaproute.adapter.SearchPlaceAdapter
 import com.ldnhat.demomaproute.databinding.ActivityMainBinding
-import com.ldnhat.demomaproute.domain.ChipCategory
+import com.ldnhat.demomaproute.domain.chipCategory
 import com.ldnhat.demomaproute.utils.AlertUtils
 import com.ldnhat.demomaproute.viewmodel.ConnectionLiveData
 import com.ldnhat.demomaproute.viewmodel.MainViewModel
@@ -167,28 +167,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             }
         })
 
-        val chipGroup = binding?.category
 
-        val inflator = LayoutInflater.from(chipGroup?.context)
+        mapType()
 
-        val chip :Chip  = inflator.inflate(R.layout.chip_category, chipGroup, false) as Chip
-        chip.text = ChipCategory.ATM.value
-        chip.tag = ChipCategory.ATM.value
-
-        chip.setOnCheckedChangeListener { buttonView, isChecked ->
-            val centerOfMap: MFLocationCoordinate? = map4D?.cameraPosition?.target
-
-            val location = "${centerOfMap?.latitude},${centerOfMap?.longitude}"
-
-            println(location)
-
-            viewModel.onFilterPlaceNearChanged(buttonView.tag as String, isChecked, location, "100")
-
-        }
-
-        chipGroup?.removeAllViews()
-        chipGroup?.addView(chip)
-
+        viewModel.placeNearBy.observe(this, {
+            it.placeNearByResult.forEach {
+                println(it.name)
+            }
+        })
         binding?.lifecycleOwner = this
 
     }
@@ -240,6 +226,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             }
         }
         updateLocationUI()
+    }
+
+    private fun mapType(){
+        val chipGroup = binding?.category
+
+        val inflator = LayoutInflater.from(chipGroup?.context)
+
+        val children = chipCategory.map {
+            val chip :Chip  = inflator.inflate(R.layout.chip_category, chipGroup, false) as Chip
+            chip.text = it
+            chip.tag = it
+
+            chip.setOnCheckedChangeListener { buttonView, isChecked ->
+                val centerOfMap: MFLocationCoordinate? = map4D?.cameraPosition?.target
+
+                val location = "${centerOfMap?.latitude},${centerOfMap?.longitude}"
+
+                viewModel.onFilterPlaceNearChanged(buttonView.tag as String, isChecked, location, "100")
+            }
+            chip
+        }
+
+        chipGroup?.removeAllViews()
+
+        for (chip in children){
+            chipGroup?.addView(chip)
+        }
     }
 
     private fun updateLocationUI(){
