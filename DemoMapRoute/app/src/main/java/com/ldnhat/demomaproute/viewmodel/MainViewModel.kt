@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.ldnhat.demomaproute.domain.Place
 import com.ldnhat.demomaproute.domain.PlaceDetail
 import com.ldnhat.demomaproute.domain.PlaceNearBy
+import com.ldnhat.demomaproute.domain.PlaceNearByResult
 import com.ldnhat.demomaproute.network.MapNetwork
 import com.ldnhat.demomaproute.utils.Constant
 import kotlinx.coroutines.*
@@ -69,6 +70,7 @@ class MainViewModel : ViewModel() {
         _modeMap.value = false
         _modelMapClick.value = false
         _placeDetail.value = null
+
     }
 
     fun updateFilter(input : String){

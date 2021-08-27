@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.ldnhat.demomaproute.R
 import com.ldnhat.demomaproute.adapter.ClickListener
+import com.ldnhat.demomaproute.adapter.PlaceNearByAdapter
 import com.ldnhat.demomaproute.adapter.SearchPlaceAdapter
 import com.ldnhat.demomaproute.databinding.ActivityMainBinding
 import com.ldnhat.demomaproute.domain.chipCategory
@@ -57,26 +58,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
 
         binding?.mapview?.getMapAsync(this)
         binding?.viewModel = viewModel
-
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding?.bottomSheet?.bottomSheet as View)
-        binding?.bottomSheet?.viewModel = viewModel
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
-        viewModel.bottomSheetState.observe(this, {
-            if (it){
-
-            }
-        })
-
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
-        })
 
         connectionLiveData.observe(this, {
             if (!it){
@@ -159,22 +140,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             }
         })
 
-        viewModel.placeDetail.observe(this, {
-            if (it != null){
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }else{
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        })
-
-
         mapType()
 
-        viewModel.placeNearBy.observe(this, {
-            it.placeNearByResult.forEach {
-                println(it.name)
-            }
-        })
+        handleBottomSheet()
+
         binding?.lifecycleOwner = this
 
     }
@@ -253,6 +222,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         for (chip in children){
             chipGroup?.addView(chip)
         }
+    }
+
+    private fun handleBottomSheet(){
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding?.bottomSheet?.bottomSheet as View)
+        binding?.bottomSheet?.viewModel = viewModel
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        val bottomSheetPlaceNearBy = BottomSheetBehavior.from(binding?.bottomSheetPlaceNearby?.placeNearbyBottomSheet as View)
+        val placeNearByAdapter = PlaceNearByAdapter()
+        binding?.bottomSheetPlaceNearby?.rvPlaceNearBy?.adapter = placeNearByAdapter
+        bottomSheetPlaceNearBy.state = BottomSheetBehavior.STATE_HIDDEN
+
+        viewModel.placeDetail.observe(this, {
+            if (it != null){
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                bottomSheetPlaceNearBy.state = BottomSheetBehavior.STATE_HIDDEN
+            }else{
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        })
+
+        viewModel.placeNearBy.observe(this, {
+            if (it != null){
+                bottomSheetPlaceNearBy.state = BottomSheetBehavior.STATE_COLLAPSED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }else{
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+            placeNearByAdapter.submitList(it.placeNearByResult)
+
+        })
     }
 
     private fun updateLocationUI(){

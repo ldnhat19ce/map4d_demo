@@ -105,6 +105,12 @@
                         android:id="@+id/bottom_sheet"
                         layout="@layout/bottom_sheet_place_information"
                         />
+
+                    <include
+                        android:id="@+id/bottom_sheet_place_nearby"
+                        layout="@layout/bottom_sheet_place_nearby"
+
+                        />
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

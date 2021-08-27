@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.ldnhat.demomaproute.domain.Direction
 import com.ldnhat.demomaproute.domain.PlaceDetail
+import com.ldnhat.demomaproute.domain.PlaceNearByResult
 import vn.map4d.types.MFLocationCoordinate
 
 @SuppressLint("SetTextI18n")
@@ -91,5 +92,21 @@ fun bottomSheetPlaceAddress(textView: TextView, placeDetail: PlaceDetail?){
 fun bottomSheetPlaceLocation(textView: TextView, placeDetail: PlaceDetail?){
     placeDetail?.let {
         textView.text = it.result.location.lat.toString() + ", "+it.result.location.lng.toString()
+    }
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("textPlaceNearByName")
+fun bottomSheetPlaceNearByName(textView: TextView,placeNearByResult: PlaceNearByResult?){
+    placeNearByResult?.let {
+        textView.text = it.name
+    }
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("textPlaceNearType")
+fun bottomSheetPlaceNearByType(textView: TextView, placeNearByResult: PlaceNearByResult?){
+    placeNearByResult?.let {
+        textView.text = it.types[0]
     }
 }
